@@ -53,7 +53,6 @@ def trova_percorso_ottimale_parquet(starting_points_csv='punti_partenza.csv', da
     for idx, row in starting_points.iterrows():
         start_lat, start_lon = row['lat'], row['lon']
         target_jurisdiction, df = trova_giurisdizione_per_punto(start_lat, start_lon, data_dir)
-        #print(target_jurisdiction)
 
         if df is None or len(df) < 8:
             print(f"Nessuna giurisdizione valida trovata per il punto {idx + 1}")
@@ -100,7 +99,7 @@ def trova_percorso_ottimale_parquet(starting_points_csv='punti_partenza.csv', da
                 current_path.append(best_next)
                 selected_ids.add(best_next['id'])
 
-            if len(current_path) >= 1:  # almeno un POI visitato
+            if len(current_path) >= 1:
                 return_time = calculate_travel_time(haversine_distance(current_path[-1]['lat_x'], current_path[-1]['lon_x'], start_lat, start_lon))
                 final_time = current_time + return_time
 
@@ -110,6 +109,8 @@ def trova_percorso_ottimale_parquet(starting_points_csv='punti_partenza.csv', da
                     best_path = current_path
 
         if best_path:
+            print(f"→ Percorso {idx + 1} nella giurisdizione '{target_jurisdiction}': tempo totale = {best_time:.1f} minuti, guadagno totale = {best_fee:.2f}")
+
             route_num = idx + 1
             jurisdiction_id = target_jurisdiction
             route_id = f"R_{jurisdiction_id}_{route_num}"
